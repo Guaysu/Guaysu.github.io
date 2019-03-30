@@ -69,7 +69,8 @@ type: page
 * `[^]` 使用 Masonry 重写了 Demo 页中的瀑布流布局，响应式交互体验更好
 * `[-]` 去除了 jQuery 和 BootStrap，使得加载速度更快
 
-* 2018.2-2018.3 进行了一次大的改版和重构，详见 [README](https://github.com/Gaohaoyang/gaohaoyang.github.io/blob/master/README.md) 和博文 [对这个 jekyll 博客主题的改版和重构](http://gaohaoyang.github.io/2016/03/12/jekyll-theme-version-2.0/)
+* 2018.2-2018.3 进行了一次大的改版和重构。
+
 * 2015.3-2015.4 完成了这个博客主题的第一版。
 
 ## 友情链接
