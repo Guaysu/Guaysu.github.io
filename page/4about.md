@@ -26,22 +26,23 @@ type: page
 
 ## 关于本站
 
-**由wuyuhui编写
+** 由wuyuhui编写
+
 ~欢迎使用~
 
 ### Update Log
 
-*2017.2.28*
+*2018.3.29*
 
 - `[^]` 修复目录滚动 bug [#22](https://github.com/Gaohaoyang/gaohaoyang.github.io/issues/22), [#48](https://github.com/Gaohaoyang/gaohaoyang.github.io/issues/48)
 
-*2016.6.20*
+*2018.3.28*
 
 * `[+]` 在文章页中添加上一篇和下一篇文章链接。
 * `[^]` 修改 font-family 顺序，避免微软雅黑将单引号解析为全角。
 * `[^]` 修复标签云算法中被除数为零的 bug。[#26](https://github.com/Gaohaoyang/gaohaoyang.github.io/issues/26), [#28](https://github.com/Gaohaoyang/gaohaoyang.github.io/issues/28), [#30](https://github.com/Gaohaoyang/gaohaoyang.github.io/issues/30)
 
-*2016.5.11 v2.0.1*
+*2018.3.27 v2.0.1*
 
 * `[^]` 优化代码，将页面中的大段评论相关代码抽离出来，放入`comments.html`
 * `[+]` 添加百度统计和Google分析代码，在`_config.yml`中配置相关参数即可
@@ -53,7 +54,7 @@ type: page
 * `[+]` 添加不蒜子计数功能，在footer上显示访问量
 * `[+]` 添加回到顶部功能
 
-*2016.4.27 v2.0.0*
+*2018.3.26 v2.0.0*
 
 * `[^]` 基于 jekyll 3.1.2 重构了所有代码
 * `[+]` 主页添加了摘要，在正文中使用4个换行符来分割，可在`_config.yml`中修改
@@ -69,7 +70,7 @@ type: page
 * `[^]` 使用 Masonry 重写了 Demo 页中的瀑布流布局，响应式交互体验更好
 * `[-]` 去除了 jQuery 和 BootStrap，使得加载速度更快
 
-* 2016.3-2016.4 进行了一次大的改版和重构，详见 [README](https://github.com/Gaohaoyang/gaohaoyang.github.io/blob/master/README.md) 和博文 [对这个 jekyll 博客主题的改版和重构](http://gaohaoyang.github.io/2016/03/12/jekyll-theme-version-2.0/)
+* 2018.2-2018.3 进行了一次大的改版和重构，详见 [README](https://github.com/Gaohaoyang/gaohaoyang.github.io/blob/master/README.md) 和博文 [对这个 jekyll 博客主题的改版和重构](http://gaohaoyang.github.io/2016/03/12/jekyll-theme-version-2.0/)
 * 2015.3-2015.4 完成了这个博客主题的第一版。
 
 ## 友情链接
