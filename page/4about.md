@@ -10,8 +10,7 @@ type: page
 {:toc}
 
 ## 关于我
-
-<iframe src="https://githubbadge.appspot.com/gaohaoyang?s=1" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0"></iframe>
+![](https://ipcounter.ihcr.top/?mode=2&mail=3481896184@qq.com&str=%E7%8F%82%E5%AD%A6%E6%98%AF%E4%B8%96%E7%95%8C%E7%AC%AC%E4%B8%80%E7%94%9F%E4%BA%A7%E5%8A%9B~&qq=3481896184&gh=wuyuhui2006&lg=%E4%B8%AD%E5%9B%BDAIM%E6%89%A9%E6%95%A3%E5%8A%9B%E5%9C%BA%E7%A0%94%E7%A9%B6%E9%99%A2&strsize=18&pic=Chtholly)
 
 就读于杭州市保俶塔实验学校，学生。
 
@@ -26,9 +25,9 @@ type: page
 
 ## 关于本站
 
-** 由wuyuhui编写
+#### 由wuyuhui编写
 
-~欢迎使用~
+#### ~欢迎使用~
 
 ### Update Log
 
