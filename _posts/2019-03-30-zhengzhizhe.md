@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "JavaScript 作用域和作用域链"
+title:  "作文"
 date:   2019-03-30 14:06:05
 categories: JavaScript
 tags: 
