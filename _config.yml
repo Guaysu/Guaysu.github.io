@@ -7,7 +7,7 @@
 
 # Site settings
 title: wuyuhui的技术专栏
-brief-intro: Android and Python Coder
+brief-intro: CPP Coder
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://wuyuhui2006.github.io" # the base hostname & protocol for your site
 
