@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "JavaScript 作用域和作用域链"
-date:   2015-05-20 14:06:05
+date:   2019-03-30 14:06:05
 categories: JavaScript
-tags: gai'bu'an
+tags: 
 excerpt: 改编自 蓬莱人形 ~ Dolls in Pseudo Paradise C62版本附带故事。
 ---
 
