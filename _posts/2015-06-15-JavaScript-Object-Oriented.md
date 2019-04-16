@@ -3,422 +3,236 @@ layout: post
 title:  "JavaScript 面向对象"
 date:   2015-06-15 14:06:05
 categories: JavaScript
-tags: JavaScript 面向对象 慕课网 ife
+tags:
+author: wuyuhui
 ---
 
 * content
 {:toc}
 
-本文为慕课网 [JavaScript深入浅出](http://www.imooc.com/learn/277)  JavaScript 面向对象笔记。
 
 
 
 
 
-## 概念
-
-> 面向对象程序设计（Object-oriented programming，OOP）是一种程序设计范型，同时也是一种程序开发的方法。对象指的是类的实例。它将对象作为程序的基本单元，将程序和数据封装其中，以提高软件的重用性、灵活性和扩展性。
->
-> ——维基百科
-
-一般面向对象包含：继承，封装，多态，抽象
-
----
-
-## 基于原型的继承
-
-    function Foo() {
-        this.y = 2;
-    }
-    console.log(typeof Foo.prototype); //object
-
-    Foo.prototype.x = 1;
-    var obj3 = new Foo();
-
-    console.log(obj3.y); //2
-    console.log(obj3.x); //1
-
-创建函数 `Foo` 的时候，就会有一个内置的 `Foo.prototype` 属性，并且这个属性是对象。
-
-在使用 `new Foo();` 创建对象实例时。`this` 会指向一个对象，并且这个对象的原型会指向 `Foo.prototype` 属性。`this.y = 2` 给这个对象赋值，并把这个对象返回。把这个对象赋值给 `obj3`。
-
-`y` 是 `obj3` 上的，`x` 是 `obj3` 的原型 `Foo.prototype` 上的。
-
-![prototype](http://7q5cdt.com1.z0.glb.clouddn.com/blog-prototype.png)
-
----
-
-### prototype 属性与原型
-
-prototype 是函数对象上预设的对象属性。
-
-原型是对象上的原型，通常是构造器的 prototype 属性。
-
----
-
-#### 例
-
-    function Person(name, age) {
-        this.name = name;
-        this.age = age;
-    }
-
-    Person.prototype.LEGS_NUM = 2;
-    Person.prototype.ARMS_NUM = 2;
-
-    Person.prototype.hi = function() {
-        console.log('Hi, my name is ' + this.name + ". I'm " + this.age + ' years old now');
-    };
-
-    Person.prototype.walking = function() {
-        console.log(this.name + ' is walking...');
-    };
-
-    function Student(name, age, className) {
-        Person.call(this, name, age); //使 Person 中的 this 指向 Student
-        this.className = className;
-    }
-
-    Student.prototype = Object.create(Person.prototype);
-    Student.prototype.constructor = Student;
-
-    Student.prototype.hi = function() {
-        console.log('Hi, my name is ' + this.name + ". I'm " + this.age + ' years old now, and from ' + this.className + ".");
-    };
-
-    Student.prototype.learn = function(subject) {
-        console.log(this.name + ' is learning ' + subject + ' at ' + this.className + '.');
-    }
-
-    //test
-    var gao = new Student('Gao', '24', 'Class 3123');
-    console.log(gao); // 这个对象的具体内容见下图
-    gao.hi(); //Hi, my name is Gao. I'm 24 years old now, and from Class 3123.
-    gao.LEGS_NUM; //2
-    gao.walking(); //Gao is walking...
-    gao.learn('JavaScript'); //Gao is learning JavaScript at Class 3123.
-
-* `Object.create(arg)` 创建一个空对象，并且这个对象的原型指向参数 `arg`。
-* `Student.prototype.constructor = Student` 为了保证一致性，否则 constructor 指向 Person。
-
----
-
-### 原型链
-
-gao 对象的原型链：
-
-![Object](http://7q5cdt.com1.z0.glb.clouddn.com/blog-oop-gao.png)
-
-下面通过图形展示原型链：
-
-![原型链](http://7q5cdt.com1.z0.glb.clouddn.com/blog-原型链.png)
-
----
-
-#### `Object.create(null)` & `.bind(null)`
-
-这两种算是特例。
-
-`Object.create(null)` 和 `.bind(null)` 这两种方式创建出来的对象是没有 `prototype` 属性的，为 `undefined`。
-
----
-
-## prototype 属性
-
-### 改变 prototype
-
-JavaScript 中的 prototype 是对象，在运行的时候可以修改。
-
-给 prototype 添加或删除一些属性，是会影响到已经创建好的实例对象的。
-
-但是，直接修改 prototype 属性，是不会影响到已经创建好的实例对象的。但是会影响到新的实例对象。如下代码：
-
-    // 上接上面的代码
-
-    // 给 prototype 添加或删除一些属性
-    Student.prototype.x = 101;
-    console.log(gao.x); //101
-
-    // 直接修改 prototype 属性
-    Student.prototype = {
-        y: 2
-    };
-
-    // 不会影响到已创建好的实例对象
-    console.log(gao.x); //101
-    console.log(gao.y); //undefined
-
-    // 会影响到新创建的实例对象
-    var ying = new Student('Ying', 24, 'UI');
-    console.log(ying.x); //undefined
-    console.log(ying.y); //2
-
----
-
-### 内置构造器的 `prototype` 属性
-
-修改内置构造器的 `prototype` 属性后，在实例化这个对象后，枚举其属性时，会把修改的内置构造器的 `prototype` 属性也枚举出来，有时候这是要避免的。可用 `defineProperty` 方法解决。如下代码：
-
-    Object.prototype.x = 1;
-    var obj = {};
-    console.log(obj.x); //1
-    console.log(obj);
-
-    for (var k in obj) {
-        console.log('result--->' + k);
-    }
-    // result--->x
-
-使用 `defineProperty` 后：
-
-    Object.defineProperty(Object.prototype, 'x', {
-        writable: true,
-        value: 1
-    });
-    var obj = {};
-    console.log(obj.x);//1
-    console.log(obj);
-    for (var k in obj) {
-        console.log('result--->' + k);
-    }
-    // nothing output here
-
-其实也可以这样枚举，使用 `hasOwnProperty` 方法：
-
-    for (var key in obj) {
-        if (obj.hasOwnProperty(key)) {
-            console.log("result--->" + key);
-        }
-    }
-
----
-
-### 创建对象-new/原型链
-
-![prototype](http://7q5cdt.com1.z0.glb.clouddn.com/blog-new prototype.png)
-
----
-
-## instanceof
-
-    console.log([1, 2] instanceof Array); //true
-    console.log([1, 2] instanceof Object); //true
-    console.log(new Object() instanceof Array); //false
-
-左边要求是对象，右边要求是构造器或函数。它会判断：**右边的构造器中的 `prototype` 属性是否出现在左边的对象的原型链上。**
-
-* **注意：**不同的 window 或 iframe 间的对象类型检测**不能**使用 `instanceof`！
-
----
-
-## 实现继承的方式
-
-    function Person() {}
-
-    function Student() {}
-
-    Student.prototype = Person.prototype; //1
-
-    Student.prototype = new Person(); //2
-
-    Student.prototype = Object.create(Person.prototype); //3
-
-    Student.prototype.constructor = Student;
-
-注释中：
-
-1 是错误的。如果改变了 Student 就会改变 Person
-
-2 可以实现继承，但是其调用了构造函数，若父类构造函数中有形参，那么传值就会比较奇怪。
-
-3 是最好的方法。创建了一个空对象，并且对象的原型指向参数 Person.prototype。这样便实现了继承。同时原型链写，不向上查找。但是 `Object.create` 是ES5 中的方法，所以可以使用下列代码做兼容：
-
-    if (!Object.create) {
-        Object.create = function(proto) {
-            function F() {}
-            F.prototype = proto;
-            return new F;
-        };
-    }
-
----
-
-## 模拟重载
-
-    function Person() {
-        var args = arguments;
-        if (typeof args[0] === 'object' && args[0]) {
-            if (args[0].name) {
-                this.name = args[0].name;
-            }
-            if(args[0].age){
-                this.age = args[0].age;
-            }
-        } else {
-            if (args[0]) {
-                this.name = args[0];
-            }
-            if (args[1]) {
-                this.age = args[1];
-            }
-        }
-    }
-
-    //重写 toString 方法
-    Person.prototype.toString = function() {
-        console.log('name='+this.name+', age='+this.age);
-    };
-
-    var gao = new Person({name:'Gao',age:24});
-    gao.toString(); // name=Gao, age=24
-
-    var ying = new Person('Ying',25);
-    ying.toString(); // name=Ying, age=25
-
-对参数进行判断，模拟实现重载。
-
----
-
-## 调用子类方法
-
-    function Person(name) {
-        this.name = name;
-    }
-
-    function Student(name, className) {
-        this.className = className;
-        Person.call(this, name); // 调用基类的构造器
-    }
-
-    var gao = new Student('Gao', '3123');
-    console.log(gao); // Student {className: "3123", name: "Gao"}
-
-    Person.prototype.init = function() {};
-
-    Student.prototype.init = function() {
-        // do sth...
-        Person.prototype.init.apply(this, arguments); // 同时也想调用父类被覆盖的方法
-    };
-
-主要是两种：调用父类的构造器，调用原型链上父类被覆盖的方法。
-
----
-
-## 链式调用
-
-    function ClassManager() {}
-    ClassManager.prototype.addClass = function(str) {
-        console.log('Class: ' + str + ' added');
-        return this;
-    };
-
-    var manager = new ClassManager();
-    manager.addClass('classA').addClass('classB').addClass('classC');
-    // Class: classA added
-    // Class: classB added
-    // Class: classC added
-
-重点在于 return this。返回这个 ClassManager 的实例。这样这个实例又可以继续调用方法。
-
----
-
-## 抽象类
-
-在构造器中 `throw new Error('');` 抛异常。这样防止这个类被直接调用。
-
-    function DetectorBase() {
-        throw new Error('Abstract class can not be invoked directly!');
-    }
-
-    DetectorBase.detect = function() {
-        console.log('Detection starting...');
-    }
-    DetectorBase.stop = function() {
-        console.log('Detection stopped.');
-    };
-    DetectorBase.init = function() {
-        throw new Error('Error');
-    }
-
-    var d = new DetectorBase();// Uncaught Error: Abstract class can not be invoked directly!
-
-    function LinkDetector() {}
-    LinkDetector.prototype = Object.create(DetectorBase.prototype);
-    LinkDetector.prototype.constructor = LinkDetector;
-
-    var l = new LinkDetector();
-    console.log(l); //LinkDetector {}__proto__: LinkDetector
-    l.detect(); //Uncaught TypeError: l.detect is not a function
-    l.init(); //Uncaught TypeError: l.init is not a function
-
-`var d = new DetectorBase();` 是不能实例化的，会报错
-
-`l.detect();` 但是这个为什么报错我就不知道了。
-
-已经在原课程下提问了，期待老师的讲解。 [抽象类中子类为什么不能调用父类的非抽象方法？](http://www.imooc.com/qadetail/82732)
-
-问题已经解决了，应该是老师当时的课件写错了，应该再基类中将这两个方法写在其原型 prototype 上。如下：
-
-    function DetectorBase() {
-        throw new Error('Abstract class can not be invoked directly!');
-    }
-
-    DetectorBase.prototype.detect = function() {
-        console.log('Detection starting...');
-    };
-    DetectorBase.prototype.stop = function() {
-        console.log('Detection stopped.');
-    };
-    DetectorBase.prototype.init = function() {
-        throw new Error('Error');
-    };
-
-    // var d = new DetectorBase();// Uncaught Error: Abstract class can not be invoked directly!
-
-    function LinkDetector() {}
-    LinkDetector.prototype = Object.create(DetectorBase.prototype);
-    LinkDetector.prototype.constructor = LinkDetector;
-
-    var l = new LinkDetector();
-    console.log(l); //LinkDetector {}__proto__: LinkDetector
-    l.detect(); //Detection starting...
-    l.init(); //Uncaught Error: Error
-
----
-
-## 模块化
-
-    var moduleA;
-    moduleA = function() {
-        var prop = 1;
-
-        function func() {}
-
-        return {
-            func: func,
-            prop: prop
-        };
-    }(); // 立即执行匿名函数
-
-prop，func 不会被泄露到全局作用域。
-
-或者另一种写法，使用 new
-
-    moduleA = new function() {
-        var prop = 1;
-
-        function func() {}
-
-        this.func = func;
-        this.prop = prop;
-    }
-
-更复杂的可以使用 Sea.js Kissy Require.js 模块化工具。
-
----
-
-最后补充一点设计模式相关的资料，我还没有来得及看的：
-
-* [学用 JavaScript 设计模式](http://www.oschina.net/translate/learning-javascript-design-patterns)
-* [常用的Javascript设计模式](http://blog.jobbole.com/29454/)
-* [JavaScript设计模式深入分析](http://developer.51cto.com/art/201109/288650_all.htm)
+## 准备工作 :
+我们大约需要 ３０磅的铀２３５，体积差不多有
+一个棒球的大小，再配合一些很容易到手的材料，这
+种炸弹就能使１／３哩以内任何东西化为乌有；２／
+３哩以内的东西严重受 损；在１。２５哩半径内的人
+都会受到致命的辐射线；辐射尘随风飘扬，能使４０
+哩内的人都致病。如果它在纽约市引爆，大概有２５
+万人会死亡，还有４０万人会 受伤。这种效果恐怖份
+子应该会很满意；这种原子弹甚至在战场上也都能派
+上用场。不过，要提醒各位：
+铀２３５的分量不要超过４５磅，因为对这样多
+的铀，其引爆的技巧相当困难，单凭业余的机槭工匠，
+大概是无法适时且有效地把这些东西凑在一起。挺有
+可能你还没做一半，它就在你面前 BOOM 了， 那可
+就真浪费感情。我个人的偏好是用３６磅或３７磅的
+铀２３５，因为这样效果不差，而且，如果设计上出
+点小差错，也不致于有太严重的后果。一旦把足够的
+材 料紧聚在一起，我们最棘手的技术就是得使它们能
+紧聚在一起维持约半秒钟，这半秒钟的延迟就是技术
+上最主要的问题。原因是这样的：当这两堆物质靠太
+近时，会 发生剧烈的反应而产生大量的能量，在瞬间
+（比一秒钟小很多）迫使这两堆物质分开。这样的结
+果和爆竹的效果差不多，几百尺外的人根本不知道有
+这回事。对一个 稍有「自尊」的恐怖份子而言，是不
+会以此为满足的，对吗？所以，当务之急就是要设计
+出一套办法，使两堆铀２３５能聚得久一点，好让一
+些比较惊人的「大事」 发生。如果你这位恐怖份子有
+栋两层楼房（含地下室）、两根火药、１５包水泥、２
+０立方码的沙石，那么大约只要一个礼拜就可以完工
+了。全部的费用，除去房租 不算，大概只要３，００
+０美元就够了。根据当前汇率，折合成人民币大概就
+是 25000 元。最后的问题是怎样把铀２３ ５或钸弄到
+手，这留待后面再谈。
+
+
+## 开始动工：
+准备妥当后，第一件事就是把分批弄来的铀２３
+５分成二等分，用一对半球容器装起来，你或可用乙
+炔喷灯（AcetyleneTorch）来作。铀的熔点是４１４。
+２℃，而乙炔喷灯的燃点是５２６。４℃，因此理论
+土来说，乙炔喷灯足以熔化铀２３５。也许你应该花
+几十块耐火砖作个窑，加上一个风箱，效果会此较好；
+不过如果你有耐心再加上一些运气（因为铀这东西燃
+烧会 BOOM），乙炔喷灯应该是够用的了。铀熔成液
+体后，流到半球状的洼槽（制陶瓷用的耐火泥就可派
+上用场），则第一个半球型作好冷却了，再移开作第二
+个。有件事要注意：这时候，在这区域附近不能有人。
+因为，铀有对人不利的特性。如果铀熔化时你就在现
+场，那么，你总会吸进一点，嘿嘿...， 其结果不是说
+你会少活几年，而是你只剩下几个钟头好活了！如果
+你这个恐怖份子确能置个人生死于度外，那当然就不
+必计较这些了，否则我建议你采用自动控制装 置。当
+铀熔化时，和它相隔５０尺，再用５吨铅隔离，这样
+应该足够安全了。将铀２３５分成两堆的工作完成后，
+你就应分别用铅箱装好。再从二楼挖个洞通到地下
+室，用一对黑铁管接起来，使总长约２０尺左右。若
+能用６寸厚的水泥敷于管外可能稍好，不过如果地板
+够坚实，而且房子是建在岩石上，也可以不必这么麻
+烦。在 放下管子之前，先把装铀的半球形容器的平面
+朝上放在水泥上，再把管子放置妥当，原子弹就已完
+工一半了。为了不使铀散逸，地下室应该用沙、石、
+水泥和水混合 填好，但因为这只要用一次就达到目的
+了，做得好不好看也无所谓啦。真正要注意的是，管
+子外面有足够的阻挡力量，使原子弹在 BOOM 前 铀
+不致漏出。其实只要半液体状的沙泥混合物，就足以
+担当大任了。如此这般，原子弹的接收部分就完工了。
+引爆部分比较难做，构想之一是将另一个半球容器放
+在 管子的上端，引爆时，让它倒向下面的接收部分就
+可以了。原理上虽很简单，但有些技术上的困难不易
+解决，比如说，如果引爆用的半球容器放歪了一点，
+它就会沿 着管子滑下来，这样你想成为恐怖份子的美
+梦就落空了，因为这种死法不会让人觉得恐怖，只会
+成为茶余饭后的笑料罢了。目前可能是最简单而有效
+的设计，把一个 细线织成的罩子（就像 夏 天防苍蝇
+的那种），放在管子的上端，再塞进管内，留约３～４
+寸在外面；这时再把另一段４尺长的管子焊在原来的
+管子上。若要使连接的部分更牢，可以在此部分 钻几
+个洞，把铁钉插进去。然后拿３尺长的２。５寸铜管，
+里面装熔化的铅，将引爆的半球容器安在铅底座中一
+个吻合的凹槽里；另一根铁棍则凿入管子的另一端约
+一尺，这装置总重量是８０～９５磅。最后，把有螺
+纹的盖子套在管子上头，等到它能旋得松紧自如时，
+再将它拿下来，在它上面钻一个洞，使能容得下引爆
+的装置 杆；装置杆则留下６～８寸长露出洞口，杆上
+并恰留钻一个钉孔。将各种大小不同的钉子试着去配
+合，最恰当的大小是能合于整个引爆装置（当然，试
+着配合时暂不 在接受管上端作，以免危险）。然后，
+将 TNT 或 炸药涂在一个碟子上（最好是咖啡壶中过
+滤器的底座），再塞进去，并插进一两个雷管。这放在
+引爆装置杆的四周，再由一两条引线连出来到外面，
+然后把它旋紧， 原子弹就大功告成了。剩下的工作只
+是把引线接到定时器上，再把下端的安全针拔掉，然
+后离开这城市，约１２小时后，这城市就离开这个世
+界了。定时器一旦引 爆，其力量足使另一个安全针脱
+落，引爆装置就掉到接收部分去，即使不考虑 BOOM
+产生的加速度，光是重力就足使９５磅的物体由２０
+尺高空掉下，产生８Ｘ１０的十次方耳格／秒的动能。
+把 BOOM 所生的冲力考虑进去，则接触点有１０的十
+二次方耳格／秒的动能，可使两个半球容器接触的时
+间够长，而产生令人满意的效果。
+
+## 防辐设备：
+为了要将所有重要的步骤交代清楚，应该再将几
+个小问题说 明一下。例如，前文曾经简略地谈到，用
+乙炔喷灯时要考虑铀有发火燃烧的可能性。其实，应
+该说整个机械操作都要在「乳状液槽」中进行。对不
+太熟悉机械技术操 作的人而言，所谓乳状液就是一种
+看来像牛乳一样的液体，和油有许多相似之处，可是
+不会发火燃烧。这种乳状液在一般机械工厂供货商处
+都很容易买到，而且不会 有入问你买这种东西干什
+么？用了这种乳状液，可以使危险降到最低程度。事
+实上，若我们要溶解铀或对铀作机械处理，最好在纯
+氮的大气中才安全。可是如果你够 小心，而且运气又
+好的话，那么也不必用这种极端安全的方法。辐射的
+问题是比较麻烦的一点，镭的辐射量和重量成正比，
+但铀的辐射量和重量却是成指数关系（也 是这种性质
+使它具有 BOOM 性）。 因为每个半球所装的质量都超
+过了临界值的一半，所以和它们同在一间房子里非常
+地危险。只吸进去一点点含放射性尘埃的空气，就意
+味着你马上要离开这个世界。 因此我建议所有的工作
+人员应有其它的氧气供应，每人口中含个氧气管或可
+解决这个问题。但要通盘解决辐射的问题可能比较麻
+烦，不过只要有决心，加上智能和运 气，这问题还是
+可以克服的。我还要建议采用一种用铅作成外壳而且
+有动力的轮椅，让操作员坐在里面可以安全地作业。
+上面只要开个小缝，用铅作的玻璃当窗户， 操作员就
+可以看到外面。铅作的袖子和手套，可以用来作一些
+需要和铀碰触的机械动作。为了防止辐射外逸，整栋
+房子的墙壁、地板都需覆盖上一层铅；地下室的天 花
+板也要加上一层铅板，以免接收部分产生辐射的问题。
+算起来起码要用上６～８吨的铅，以维持基本的安全
+问题。这么一来，又得多花工夫支撑地板，免得垮下
+来。这些工作都作好了，就可以开始动手制造原子弹。
+如果你想作一道「红烧兔子」大餐，打开食谱第一步
+就是要抓一只兔子来！同理，现在你也会问：「怎样把
+铀 ２３５弄到手？」（铀２３５通常此钸容易拿到。）
+其实，你只要平时注意看报纸，应该不难知道，核能
+发电厂里就有。只要由电厂里偷根控制棒出来，把它
+熔了， 再把其中没有用的铀２３８分离出来就成了。
+要潜入一个核子反应炉，说起来并不是什么太难的事，
+尤其大学校园中的核子反应炉，都只有些马马虎虎的
+安全设施。 一般设施就是些带刺铁丝网围墙，门口站
+了一两个警卫。事前可以作出误闯的样子来几次投石
+问路，看看有没有什么电子安全装置，大概结果都是
+根本没有的。可是 我们偷偷摸摸的潜进去并没有什么
+用，因为铀非常的重，不要讲是一个人，就算是一队
+人马开进去，也搬不到足够的分量出来。尤其这批人
+马又身装铅甲以防辐射， 就更不管用了。依我之见，
+干脆偷辆卡车和拖车（要那种特重型的，就是运三峡
+电站转子的那种），干掉警卫，代以自己人，然后就直
+闯进去拿你要的东西，很干 脆，效率又高。不过，反
+应器都是装在一个镍－铁合金的球状容器里，容器再
+浸在水中，通常，旁边会有千斤顶，以便修护时用，
+所以也可以顺便用来把整个反应炉 心起出来放到卡
+车里。不过要注意一件事，搬动反应器时要拔出一些
+燃料棒，或是插进一些节制棒，否则你和整个反应器
+都要化为灰烬。建议你或可向当时被你挟制 的人质请
+教这方面的技术，以便搬动炉心。此外，整个反应器
+重约５０吨，加上拖车需要６寸厚的铅板作防护，所
+以拖车如何拖动６５吨的重量，还是颇伤脑筋的 （所
+以前面要用特重型的拖车，要不然到了地，炉子也搬
+上车了，却发现拖不动，那不是面子都丢尽了）。或者，
+你觉得搬走整个反应器不切实际，也可以只带走约
+１，２００磅的备用燃料棒。不过千万也要带着石墨
+或铅，免得燃料棒因不断地反应生热而熔化了。如果
+你忘了这步骤，回家打开盖子，只会看到一堆熔化了
+的铀， 而且四处散射，可能你当场就一命呜呼而遗笑
+万年。性命是小，这脸咱可丢不起，所以别忘记拿了
+１，２００磅的燃料棒之后，要和１５，０００磅的
+石墨或铅混 合。反应器的铀大约含３％的铀２３５
+（自然界铀则只含０．５％的铀２３５），做原子弹的
+铀则需要９７％的铀２３５，否则根本不 BOOM。到
+手的１，２００磅燃料棒，可以提炼出所需要约 36
+磅的铀２３５，不过要有耐心和经验去分离它。如果
+你自知无法全部把铀２３５分离出来，就得多弄点燃
+料棒。一般说来，以目前的技术，要达到每次增加纯
+度２５％并没有什么问题，所以你最少要弄到４，８
+００磅的燃料棒，若能弄到９，６００磅最好。把这
+些加上去，你总共要带１５万磅（７５吨）的东西。
+其次还要找个地方放这些东西，我建议你租间仓库，
+如用原来那两层楼的建筑来分离铀似乎不太实际，因
+为这至少需要２万平方尺的空间。
+
+## 分离高招：
+下面就要考虑用 什么方法来分离铀２３５。对恐
+怖份子来说，气体扩散法是好方法之一，这也是早期
+制造原子弹时所采用的，不但可靠又不必太复杂的技
+术。不过花费较多，而且所 用的化学药品更是吓人。
+首先，你要有约１２哩长的特殊玻璃线钢管，并以６
+０吨的氢氟酸（ＨＦ）形成六氟化铀，然后吹向一具
+有特殊小孔的膜。因为六氟化铀 ２３８较重，在经过
+这层膜时会被陷住而不易透过。每过一次可使铀２３
+５的成分增加０。５％，如此程序只要反复操作，所
+得六氟化铀２３５的成分就愈大，最后 只要把六氟化
+铀中的氟分离出来就行了。因为氢氟酸很贵，而且不
+易取得所以最好是去偷一点来，要不然就先去偷个几
+百万美金也行。如果你觉得此路不通，还有其 它的办
+法 。 你 可 以 在 树 林 里 建 个 滋 生 反 应 器
+（BreederReactor）， 用铀来作钸，再用化学上的技术
+分离即可。至于如何建滋生反应器，也不是难事，随
+便一本大学教科书，都可以告诉你好几种方法。虽然
+在理论上没有困难，但是也 有它实际上的难处。不过
+如果你刚好有私人用的小河，又有几火车的钠，数量
+可观的不锈钢管，一百亩与外界隔离的土地，那就没
+有间题。如果对这两种方法你都没 有兴趣，还有一些
+有趣的新技术可供参考。你可以先用一块低温磁铁
+（CryogenicMagnet），它在液态氦的温度（约零下２
+７０℃）下能保持 20,000 高斯的磁扬...不过，唔，不
+过下面的程序太复杂了... 还有一法是用雷射，因为铀
+２３８较重，被激光束照射后，运动的偏离角比铀２
+３５小。所以若在和雷射光垂直的平面上洒上一层铀，
+则铀２３５、铀２３８可藉其偏离角来分离。此法原
+理上简单可行，但时间上太慢。一天大概只能处理 20
+磅的 铀（含２３５和２３８），而分离的效率约１２。
+５％，每处理一次可以产生约１０％的铀２３５，所
+以要处理９次才能达到原子弹的标准。如此算来，从
+９，６００磅磅的燃料棒中分离出３６磅纯度９７％
+的铀２３５，约需费时四年、。然而，它的辐射量又使
+你根本没有四年好活，所以还得找三两个志愿者来完
+成你 的未竟之志。因此，若能有愚公移山之志，或可
+成 功 ， 祝 你 好 运 !
