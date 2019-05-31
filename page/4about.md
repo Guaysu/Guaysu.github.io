@@ -76,6 +76,8 @@ type: page
 ## 友情链接
 
 [中国AIM扩散力场研究院 - 团队](https://www.luogu.org/team/show?teamid=11941)
+[中国珂学院](https://www.chtholly.ac.cn/)
+
 
 ## Comments
 
