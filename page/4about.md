@@ -12,11 +12,13 @@ type: page
 ## 关于我
 ![](https://ipcounter.ihcr.top/?mode=2&mail=3481896184@qq.com&str=%E7%8F%82%E5%AD%A6%E6%98%AF%E4%B8%96%E7%95%8C%E7%AC%AC%E4%B8%80%E7%94%9F%E4%BA%A7%E5%8A%9B~&qq=3481896184&gh=wuyuhui2006&lg=%E4%B8%AD%E5%9B%BDAIM%E6%89%A9%E6%95%A3%E5%8A%9B%E5%9C%BA%E7%A0%94%E7%A9%B6%E9%99%A2&strsize=18&pic=Chtholly)
 
-就读于杭州市保俶塔实验学校，学生。
+就读于杭州市█████学校，初[数据已修改]学生，C++ OIer，网易音乐人。
 
-主要兴趣集中在写程序，弹钢琴，有时候也会编曲
+主要兴趣集中在写程序，弹钢琴，有时候也会编曲。
 
 还有，学习是一个非常愉快的过程。共同加油！
+
+#  Secure ， Contain ， Protect 
 
 ## 联系我
 
@@ -25,9 +27,7 @@ type: page
 
 ## 关于本站
 
-#### 由wuyuhui编写
-
-#### ~欢迎使用~
+#### 由Ghy大佬编写。
 
 ### Update Log
 
@@ -79,6 +79,7 @@ type: page
 
 [中国珂学院](https://www.chtholly.ac.cn/)
 
+欢迎交换友链！
 
 ## Comments
 
