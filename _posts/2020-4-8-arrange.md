@@ -1,15 +1,15 @@
 ---
 layout: post
-title:  "Web App 相关技术"
-date:   2015-06-17 14:06:05
-categories: JavaScript
-tags: JavaScript HTML CSS Sass 移动端 XSS AMD requireJS CommonJS 性能优化 WebApp
+title:  "编曲从入门到入坟"
+date:   2020-04-08 14:06:05
+categories: arrange
+tags: arrange
 ---
 
 * content
 {:toc}
 
-> 往前推2到3年，前端工程师还在忧心忡忡地想，移动互联网时代下，前端是不是没有生存空间了。但今天一看，在我们团队，前端工程师超过一半的工作都是在做移动端的Web或者APP的开发。移动Web或者APP在技术本质上是和做桌面端Web没有本质区别，但是移动端的坑那是非常的多，通过学习这部分内容，让你成为一名桌面移动通吃的前端开发工程师。
+> 从你的自我介绍可以看出，你似乎想学编曲？如你所见，这篇专栏正是为你而写的。如果有问题，也非常欢迎来问我哦！好了，废话不说，我们开始
 
 
 
